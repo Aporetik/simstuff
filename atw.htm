@@ -303,7 +303,7 @@
     visitedAirports.forEach(function (airport) {
       L.marker([airport.lat, airport.lon], { icon: greenIcon })
         .addTo(map)
-        .bindPopup(`<b>${airport.icao}</b><br>${airport.name}<br>Max Runway: ${airport.max}<br>Next leg: ${airport.leg} nm`);
+        .bindPopup(`<b>${airport.icao}</b><br>${airport.name}<br>Max Runway: ${airport.max} metres<br>Next leg: ${airport.leg} nm`);
     });
 
     // Create a polyline to visualize the optimized route
