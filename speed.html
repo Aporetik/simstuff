@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Simulator CRT Display</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="crt-bezel">
+        <div class="crt">
+            <div class="crt-scan-area">
+                <em>VSpeed Display</em>
+                <select>
+                    <option value="NONE" selected disabled hidden>Select Plane</option>
+                    <option value="P46T">P46T</option>
+                    <option value="A320">A320</option>
+                    <option value="A32N">A32N</option>
+                    <option value="C172">C172</option>
+                </select>
+                <hr id="flaps-divider"/>
+                <div class="title2" id="flaps-title">FLAPS</div>
+                <div class="container">
+                    <div id="notch1"></div>
+                    <div class="speed" id="FLE1"></div>
+                    <div id="notch2"></div>
+                    <div class="speed" id="FLE2"></div>
+                    <div id="notch3"></div>
+                    <div class="speed" id="FLE3"></div>
+                    <div id="notch4"></div>
+                    <div class="speed" id="FLE4"></div>
+                    <div id="notch5"></div>
+                    <div class="speed" id="FLE5"></div>
+                </div>
+
+                <hr id="gear-divider" />
+                <div class="title2" id="gear-title">GEAR</div>
+                <div class="container">
+                    <div></div>
+                    <div class="speed" id="G-ext">1</div>
+                    <div></div>
+                    <div class="speed" id="G-ret">1</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const speeds = {
+        NONE: { FLE1: "", FLE2: "", FLE3: "", FLE4: "", FLE5: "", EXT: "d", RET: "d" },
+        P46T: { FLE1: 168, FLE2: 135, FLE3: 118, FLE4: "", FLE5: "", EXT: 135, RET: 118 },
+        A320: { FLE1: 150, FLE2: 170, FLE3: 190, FLE4: 210, FLE5: 230, EXT: 250, RET: 270 },
+        A32N: { FLE1: 160, FLE2: 180, FLE3: 200, FLE4: 220, FLE5: 240, EXT: 260, RET: 280 },
+        C172: { FLE1: 70, FLE2: 80, FLE3: 90, FLE4: 100, FLE5: 110, EXT: "", RET: "" }
+    };
+    // JavaScript to handle the select change event
+    document.querySelector('select').addEventListener('change', function () {
+        console.log('Selected plane:', this.value);
+        // Update the speeds based on the selected plane
+        // Update the value for the flap degrees at each notch
+        const plane = this.value;
+
+        // Update the display with the speeds for the selected plane
+        document.getElementById('FLE1').textContent = speeds[plane].FLE1;
+        document.getElementById('FLE2').textContent = speeds[plane].FLE2;
+        document.getElementById('FLE3').textContent = speeds[plane].FLE3;
+        document.getElementById('FLE4').textContent = speeds[plane].FLE4;
+        document.getElementById('FLE5').textContent = speeds[plane].FLE5;
+        document.getElementById('G-ext').textContent = speeds[plane].EXT;
+        document.getElementById('G-ret').textContent = speeds[plane].RET;
+
+        const degrees = {
+            P46T: { FLE1: 10, FLE2: 20, FLE3: 30, FLE4: " ", FLE5: " ", EXT: "EXT", RET: "RET" },
+            A320: { FLE1: 15, FLE2: 25, FLE3: 35, FLE4: 45, FLE5: 55, EXT: 65, RET: 75 },
+            A32N: { FLE1: 18, FLE2: 28, FLE3: 38, FLE4: 48, FLE5: 58, EXT: 68, RET: 78 },
+            C172: { FLE1: 5, FLE2: 10, FLE3: 15, FLE4: 20, FLE5: 25, EXT: "", RET: "" }
+        };
+        // Update the notch degrees based on the selected plane
+        document.querySelectorAll('.container div[id^="notch"]').forEach((notch, index) => {
+            notch.textContent = degrees[plane][`FLE${index + 1}`] || degrees[plane].EXT;
+        });
+
+        // hide the FLE4 and FLE5 for planes on if there is an empty strings for those IDs
+        // rerun this script when the select element changes
+    });
+
+    function updateFlapVisibility() {
+        console.log('Updating visibility for plane:', document.querySelector('select').value);
+        const plane = document.querySelector('select').value;
+        document.getElementById('FLE1').style.display = speeds[plane].FLE1 ? 'block' : 'none';
+        document.getElementById('FLE2').style.display = speeds[plane].FLE2 ? 'block' : 'none';
+        document.getElementById('FLE3').style.display = speeds[plane].FLE3 ? 'block' : 'none';
+        document.getElementById('FLE4').style.display = speeds[plane].FLE4 ? 'block' : 'none';
+        document.getElementById('FLE5').style.display = speeds[plane].FLE5 ? 'block' : 'none';
+        document.getElementById('flaps-title').style.display = speeds[plane].FLE1 ? 'block' : 'none';
+        document.getElementById('flaps-divider').style.display = speeds[plane].FLE1 ? 'block' : 'none';
+    }
+
+    
+    function updateGearVisibility() {
+        console.log('Updating Gear for plane:', document.querySelector('select').value);
+        const plane = document.querySelector('select').value;
+        document.getElementById('G-ext').style.display = speeds[plane].EXT ? 'block' : 'none';
+        document.getElementById('G-ret').style.display = speeds[plane].RET ? 'block' : 'none';
+        document.getElementById('gear-title').style.display = speeds[plane].EXT ? 'block' : 'none';
+        document.getElementById('gear-divider').style.display = speeds[plane].RET ? 'block' : 'none';
+    }
+    // Initial call to set visibility based on the default selected plane
+    updateFlapVisibility();
+    // Add event listener to update visibility when the select changes
+    document.querySelector('select').addEventListener('change', updateFlapVisibility);
+    // Initial call to set visibility based on the default selected plane
+    updateGearVisibility();
+    // Add event listener to update visibility when the select changes
+    document.querySelector('select').addEventListener('change', updateGearVisibility);
+
+</script>
+<script>
+
+
+
+</script>
+
+
+</html>
