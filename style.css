@@ -67,7 +67,7 @@
 
 .crt-scan-area {
   width: calc(100vw - 52px);
-  height: 31.99992em;
+  height: calc(100vh - 52px);
   margin: 2.66667em;
   overflow-y: hidden;
   font-family: atc;
